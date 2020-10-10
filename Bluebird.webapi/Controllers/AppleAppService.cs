@@ -83,7 +83,7 @@ namespace Bluebird.webapi.Controllers
              }))
              ;
             var eResult = compilation.Emit(DllFullName);
-            compilation.em
+           
             var asms = AssemblyLoadContext.Default.LoadFromAssemblyPath(DllFullName);
         }
 
