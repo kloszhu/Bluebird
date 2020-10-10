@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Bluebird.webapi</name>
+    </assembly>
+    <members>
+        <member name="M:Bluebird.webapi.Controllers.AppleAppService.Get(System.Int32)">
+            <summary>
+            Get An Apple.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Bluebird.webapi.Controllers.AppleAppService.Get">
+            <summary>
+            Get All Apple.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Bluebird.webapi.Controllers.AppleAppService.Delete(System.Int32)">
+            <summary>
+            Delete Apple
+            </summary>
+            <param name="id">Apple Id</param>
+        </member>
+    </members>
+</doc>

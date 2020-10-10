@@ -16,7 +16,7 @@ namespace Bluebird.FileManager
 
         private static string LeftQ="{";
         private static string RightQ = "}";
-        public StringBuilder CreateEntityClass(string modelName,string className ,string[] Fields=null, string[] Reflences=null ) {
+        public string CreateEntityClass(string modelName,string className ,string[] Fields=null, string[] Reflences=null ) {
             StringBuilder Template = new StringBuilder();
             Template.AppendLine(@"
 using System;
@@ -38,13 +38,16 @@ using System.Text;");
 
             Template.AppendLine(RightQ);
             Template.AppendLine(RightQ);
-            return Template;
+            return Template.ToString();
         }
 
-        public void CreateDll(string DllNamewithoutExt,StringBuilder Template) {
+
+
+        public void CreateDll(string DllNamewithoutExt,string Template) {
             var bathPath = Directory.GetCurrentDirectory();
             string DllFullPath = Path.Combine(bathPath, DllNamewithoutExt);
             string DllFullName = Path.Combine(DllFullPath, DllNamewithoutExt + ".dll");
+            //string DLLFullXML= Path.Combine(DllFullPath, DllNamewithoutExt + ".xml");
             if (!Directory.Exists(DllFullPath)) {
                 Directory.CreateDirectory(DllFullPath);
             }
@@ -57,30 +60,28 @@ using System.Text;");
                 SelectMany(a => a.ResolveReferencePaths().Select(b => MetadataReference.CreateFromFile(b))
                 .ToArray()).ToArray();
 
+   
 
             var compilation = CSharpCompilation.Create(DllNamewithoutExt)
-                .WithOptions(new CSharpCompilationOptions(
-                    Microsoft.CodeAnalysis.OutputKind.DynamicallyLinkedLibrary,
-                    usings: null,
-                    optimizationLevel: OptimizationLevel.Debug, // TODO
-                    checkOverflow: true,                       // TODO
-                    allowUnsafe: true,                          // TODO
-                    platform: Platform.AnyCpu,
-                    warningLevel: 4,
-                    xmlReferenceResolver: null // don't support XML file references in interactive (permissions & doc comment includes)
-                    ))
-                .AddReferences(_ref)
-              .AddSyntaxTrees(CSharpSyntaxTree.ParseText(Template.ToString()))
-              ;
-            var eResult = compilation.Emit(DllFullName);
+               .WithOptions(new CSharpCompilationOptions(
+                   Microsoft.CodeAnalysis.OutputKind.DynamicallyLinkedLibrary,
+                   usings: null,
+                   optimizationLevel: OptimizationLevel.Debug, // TODO
+                   checkOverflow: true,                       // TODO
+                   allowUnsafe: true,                          // TODO
+                   platform: Platform.AnyCpu,
+                   warningLevel: 4,
+                   xmlReferenceResolver: null // don't support XML file references in interactive (permissions & doc comment includes)
+                   ))
+               .AddReferences(_ref)
+
+             .AddSyntaxTrees(CSharpSyntaxTree.ParseText(Template))
+             ;
+           var eResult = compilation.Emit(DllFullName);
+           var asm = AssemblyLoadContext.Default.LoadFromAssemblyPath(DllFullName);
         }
 
-        public void LoadDllInProject(string DllNamewithoutExt) {
-            var bathPath = Directory.GetCurrentDirectory();
-            string DllFullPath = Path.Combine(bathPath, DllNamewithoutExt);
-            string DllFullName = Path.Combine(DllFullPath, DllNamewithoutExt + ".dll");
-            AssemblyLoadContext.Default.LoadFromAssemblyPath(DllFullName);
-        }
+       
 
 
 
