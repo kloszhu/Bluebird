@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Bluebird.FileManager": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

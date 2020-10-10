@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -51,14 +52,28 @@ using System.Text;");
             if (!Directory.Exists(DllFullPath)) {
                 Directory.CreateDirectory(DllFullPath);
             }
-            else {
+            else 
+            {
                 Directory.Delete(DllFullPath, true);
                 Directory.CreateDirectory(DllFullPath);
             }
+
+            var _refef = DependencyContext.Default.GetDefaultAssemblyNames().ToList();
+            var dd = _refef.Where(a => a.Name.Contains("Microsoft.AspNetCore.Mvc"));
+            MetadataReference[] _ref = _refef.Select(a => MetadataReference.CreateFromFile(Assembly.Load(a).Location)).ToArray();
+         
             ///加载基础引用
-            MetadataReference[] _ref = DependencyContext.Default.CompileLibraries.
-                SelectMany(a => a.ResolveReferencePaths().Select(b => MetadataReference.CreateFromFile(b))
-                .ToArray()).ToArray();
+            //MetadataReference[] _ref = DependencyContext.Default.CompileLibraries.
+            //    Where(a => !a.Name.Equals("Microsoft.AspNetCore.Antiforgery") && !a.Name.Contains("Microsoft.AspNetCore")).
+            //    SelectMany(a => a.ResolveReferencePaths().Select(b => MetadataReference.CreateFromFile(b))
+            //    .ToArray()).ToArray();
+            //       MetadataReference[] _ref =
+            //DependencyContext.Default.CompileLibraries
+            //.First(cl => cl.Name == "Microsoft.AspNetCore.App")
+            //.ResolveReferencePaths()
+            //.Select(asm => MetadataReference.CreateFromFile(asm))
+            //.ToArray();
+
 
             var compilation = CSharpCompilation.Create(DllNamewithoutExt, references: new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) })
                .WithOptions(new CSharpCompilationOptions(
@@ -73,10 +88,12 @@ using System.Text;");
                    ))
                .AddReferences(_ref)
 
-             .AddSyntaxTrees(CSharpSyntaxTree.ParseText(Template))
+             .AddSyntaxTrees(CSharpSyntaxTree.ParseText(Template,new CSharpParseOptions {
+            
+             }))
              ;
            var eResult = compilation.Emit(DllFullName);
-           var asm = AssemblyLoadContext.Default.LoadFromAssemblyPath(DllFullName);
+           var asms = AssemblyLoadContext.Default.LoadFromAssemblyPath(DllFullName);
         }
 
        

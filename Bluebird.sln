@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bluebird.webapi", "Bluebird.webapi\Bluebird.webapi.csproj", "{DBD52ADC-5B04-4122-AD9D-3122FB5D30FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bluebird.webapi", "Bluebird.webapi\Bluebird.webapi.csproj", "{DBD52ADC-5B04-4122-AD9D-3122FB5D30FF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{35E57D6D-D088-446F-B982-4D4B55DD56B9}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,9 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{2CE9
 		安装包.txt = 安装包.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bluebird.FileManager", "Bluebird.FileManager\Bluebird.FileManager.csproj", "{F0F05976-C7B8-414D-8F37-FDB7A6C89AA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bluebird.FileManager", "Bluebird.FileManager\Bluebird.FileManager.csproj", "{F0F05976-C7B8-414D-8F37-FDB7A6C89AA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bluebird.Tests", "Bluebird.Tests\Bluebird.Tests.csproj", "{1E94559A-0E09-44E0-94AE-EFDBCE0CECC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bluebird.Tests", "Bluebird.Tests\Bluebird.Tests.csproj", "{1E94559A-0E09-44E0-94AE-EFDBCE0CECC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bluebird.testapi", "Bluebird.testapi\Bluebird.testapi.csproj", "{55964DB4-D233-4C8F-B802-823F27F75A33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{1E94559A-0E09-44E0-94AE-EFDBCE0CECC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E94559A-0E09-44E0-94AE-EFDBCE0CECC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E94559A-0E09-44E0-94AE-EFDBCE0CECC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55964DB4-D233-4C8F-B802-823F27F75A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55964DB4-D233-4C8F-B802-823F27F75A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55964DB4-D233-4C8F-B802-823F27F75A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55964DB4-D233-4C8F-B802-823F27F75A33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

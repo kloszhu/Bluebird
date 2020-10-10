@@ -1,0 +1,63 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Bluebird.FileManager;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Panda.DynamicWebApi;
+using Panda.DynamicWebApi.Attributes;
+
+namespace Bluebird.webapi.Controllers
+{
+    [DynamicWebApi]
+    public class GuicyAppService : IDynamicWebApi
+    {
+        private static readonly Dictionary<int, string> Guicy = new Dictionary<int, string>() {
+            [1] = "Big Guicy",
+            [2] = "Small Guicy"
+        };
+
+   
+
+        /// <summary>
+        /// Get An Guicy.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id:int}")]
+        public string Get(int id)
+        {
+            if (Guicy.ContainsKey(id)) {
+                return Guicy[id];
+            }
+            else {
+                return "No Guicy!";
+            }
+        }
+
+        /// <summary>
+        /// Get All Guicy.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> Get()
+        {
+            return Guicy.Values;
+        }
+
+   
+
+        /// <summary>
+        /// Delete Guicy
+        /// </summary>
+        /// <param name="id">Guicy Id</param>
+        [HttpDelete("{id:int}")]
+        public void Delete(int id)
+        {
+            if (Guicy.ContainsKey(id)) {
+                Guicy.Remove(id);
+            }
+        }
+
+    }
+}
