@@ -27,11 +27,7 @@ namespace Bluebird.webapi.Controllers
         };
 
 
-        public void PostApple() {
-
-           string Temp= File.ReadAllText("Template/File.txt");
-           CreateDll("mycontroller", Temp);
-        }
+        
 
          public void CreateDll(string DllNamewithoutExt, string Template)
         {

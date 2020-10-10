@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,6 +31,8 @@ namespace Bluebird.webapi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<IActionDescriptorChangeProvider>(MyActionDescriptorChangeProvider.Instance);
+            services.AddSingleton(MyActionDescriptorChangeProvider.Instance);
             // 注册Swagger生成器，定义一个和多个Swagger 文档
             services.AddSwaggerGen(options => {
                 options.SwaggerDoc("v1", new OpenApiInfo() { Title = "Panda Dynamic WebApi", Version = "v1" });

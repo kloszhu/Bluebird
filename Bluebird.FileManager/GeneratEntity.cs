@@ -15,16 +15,17 @@ namespace Bluebird.FileManager
     {
         //AssemblyLoadContext.Default.LoadFromAssemblyPath("E:/Project/FD/FD.xunit/bin/Debug/netcoreapp3.1/dd/test.dll");
 
-        private static string LeftQ="{";
+        private static string LeftQ = "{";
         private static string RightQ = "}";
-        public string CreateEntityClass(string modelName,string className ,string[] Fields=null, string[] Reflences=null ) {
+        public string CreateEntityClass(string modelName, string className, string[] Fields = null, string[] Reflences = null)
+        {
             StringBuilder Template = new StringBuilder();
             Template.AppendLine(@"
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;");
-            Reflences = Reflences==null? new HashSet<string>().ToArray(): Reflences;
+            Reflences = Reflences == null ? new HashSet<string>().ToArray() : Reflences;
             foreach (var item in Reflences) {
                 Template.AppendLine($"using {item};");
             };
@@ -32,7 +33,7 @@ using System.Text;");
             Template.AppendLine(LeftQ);
             Template.AppendLine($"public class {className}");
             Template.AppendLine(LeftQ);
-            Fields = Fields==null? new HashSet<string>().ToArray(): Fields;
+            Fields = Fields == null ? new HashSet<string>().ToArray() : Fields;
             foreach (var item in Fields) {
                 Template.AppendLine(item);
             }
@@ -44,7 +45,8 @@ using System.Text;");
 
 
 
-        public void CreateDll(string DllNamewithoutExt,string Template) {
+        public Assembly CreateDll(string DllNamewithoutExt, string Template)
+        {
             var bathPath = Directory.GetCurrentDirectory();
             string DllFullPath = Path.Combine(bathPath, DllNamewithoutExt);
             string DllFullName = Path.Combine(DllFullPath, DllNamewithoutExt + ".dll");
@@ -52,8 +54,7 @@ using System.Text;");
             if (!Directory.Exists(DllFullPath)) {
                 Directory.CreateDirectory(DllFullPath);
             }
-            else 
-            {
+            else {
                 Directory.Delete(DllFullPath, true);
                 Directory.CreateDirectory(DllFullPath);
             }
@@ -61,7 +62,7 @@ using System.Text;");
             var _refef = DependencyContext.Default.GetDefaultAssemblyNames().ToList();
             var dd = _refef.Where(a => a.Name.Contains("Microsoft.AspNetCore.Mvc"));
             MetadataReference[] _ref = _refef.Select(a => MetadataReference.CreateFromFile(Assembly.Load(a).Location)).ToArray();
-         
+
             ///加载基础引用
             //MetadataReference[] _ref = DependencyContext.Default.CompileLibraries.
             //    Where(a => !a.Name.Equals("Microsoft.AspNetCore.Antiforgery") && !a.Name.Contains("Microsoft.AspNetCore")).
@@ -88,15 +89,15 @@ using System.Text;");
                    ))
                .AddReferences(_ref)
 
-             .AddSyntaxTrees(CSharpSyntaxTree.ParseText(Template,new CSharpParseOptions {
-            
+             .AddSyntaxTrees(CSharpSyntaxTree.ParseText(Template, new CSharpParseOptions {
+
              }))
              ;
-           var eResult = compilation.Emit(DllFullName);
-           var asms = AssemblyLoadContext.Default.LoadFromAssemblyPath(DllFullName);
+            var eResult = compilation.Emit(DllFullName);
+            return AssemblyLoadContext.Default.LoadFromAssemblyPath(DllFullName);
         }
 
-       
+
 
 
 
