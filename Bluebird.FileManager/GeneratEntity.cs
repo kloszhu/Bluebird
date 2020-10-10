@@ -60,9 +60,7 @@ using System.Text;");
                 SelectMany(a => a.ResolveReferencePaths().Select(b => MetadataReference.CreateFromFile(b))
                 .ToArray()).ToArray();
 
-   
-
-            var compilation = CSharpCompilation.Create(DllNamewithoutExt)
+            var compilation = CSharpCompilation.Create(DllNamewithoutExt, references: new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) })
                .WithOptions(new CSharpCompilationOptions(
                    Microsoft.CodeAnalysis.OutputKind.DynamicallyLinkedLibrary,
                    usings: null,
