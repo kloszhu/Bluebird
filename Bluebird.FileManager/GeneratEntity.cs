@@ -75,9 +75,7 @@ using System.Text;");
             //.ToArray();
 
 
-   
-
-            var compilation = CSharpCompilation.Create(DllNamewithoutExt)
+            var compilation = CSharpCompilation.Create(DllNamewithoutExt, references: new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) })
                .WithOptions(new CSharpCompilationOptions(
                    Microsoft.CodeAnalysis.OutputKind.DynamicallyLinkedLibrary,
                    usings: null,
