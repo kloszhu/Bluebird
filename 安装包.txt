@@ -1,2 +1,6 @@
 System.Runtime.Loader
 System.Configuration.ConfigurationManager
+Microsoft.CodeAnalysis.CSharp
+Microsoft.Extensions.DependencyModel
+Roslyn.Diagnostics.Analyzers
+Microsoft.CodeAnalysis.Analyzers

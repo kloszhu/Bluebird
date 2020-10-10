@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Bluebird.Tests": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

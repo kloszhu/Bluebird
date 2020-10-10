@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Bluebird.webapi.Controllers
+namespace Bluebird.testapi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

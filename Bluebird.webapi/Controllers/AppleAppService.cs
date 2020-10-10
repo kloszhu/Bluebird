@@ -4,47 +4,37 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Threading.Tasks;
+using Bluebird.FileManager;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Extensions.DependencyModel;
+using Microsoft.Extensions.Logging;
+using Panda.DynamicWebApi;
+using Panda.DynamicWebApi.Attributes;
 
-namespace Bluebird.FileManager
+namespace Bluebird.webapi.Controllers
 {
-    public class GeneratEntity
+    [DynamicWebApi]
+    public class AppleAppService : IDynamicWebApi
     {
-        //AssemblyLoadContext.Default.LoadFromAssemblyPath("E:/Project/FD/FD.xunit/bin/Debug/netcoreapp3.1/dd/test.dll");
+        private static readonly Dictionary<int, string> Apples = new Dictionary<int, string>() {
+            [1] = "Big Apple",
+            [2] = "Small Apple"
+        };
 
-        private static string LeftQ="{";
-        private static string RightQ = "}";
-        public string CreateEntityClass(string modelName,string className ,string[] Fields=null, string[] Reflences=null ) {
-            StringBuilder Template = new StringBuilder();
-            Template.AppendLine(@"
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;");
-            Reflences = Reflences==null? new HashSet<string>().ToArray(): Reflences;
-            foreach (var item in Reflences) {
-                Template.AppendLine($"using {item};");
-            };
-            Template.AppendLine($"namespace {modelName} ");
-            Template.AppendLine(LeftQ);
-            Template.AppendLine($"public class {className}");
-            Template.AppendLine(LeftQ);
-            Fields = Fields==null? new HashSet<string>().ToArray(): Fields;
-            foreach (var item in Fields) {
-                Template.AppendLine(item);
-            }
 
-            Template.AppendLine(RightQ);
-            Template.AppendLine(RightQ);
-            return Template.ToString();
+        public void PostApple() {
+
+           string Temp= File.ReadAllText("Template/File.txt");
+           CreateDll("mycontroller", Temp);
         }
 
-
-
-        public void CreateDll(string DllNamewithoutExt,string Template) {
+         public void CreateDll(string DllNamewithoutExt, string Template)
+        {
             var bathPath = Directory.GetCurrentDirectory();
             string DllFullPath = Path.Combine(bathPath, DllNamewithoutExt);
             string DllFullName = Path.Combine(DllFullPath, DllNamewithoutExt + ".dll");
@@ -52,8 +42,7 @@ using System.Text;");
             if (!Directory.Exists(DllFullPath)) {
                 Directory.CreateDirectory(DllFullPath);
             }
-            else 
-            {
+            else {
                 Directory.Delete(DllFullPath, true);
                 Directory.CreateDirectory(DllFullPath);
             }
@@ -61,7 +50,7 @@ using System.Text;");
             var _refef = DependencyContext.Default.GetDefaultAssemblyNames().ToList();
             var dd = _refef.Where(a => a.Name.Contains("Microsoft.AspNetCore.Mvc"));
             MetadataReference[] _ref = _refef.Select(a => MetadataReference.CreateFromFile(Assembly.Load(a).Location)).ToArray();
-         
+
             ///加载基础引用
             //MetadataReference[] _ref = DependencyContext.Default.CompileLibraries.
             //    Where(a => !a.Name.Equals("Microsoft.AspNetCore.Antiforgery") && !a.Name.Contains("Microsoft.AspNetCore")).
@@ -74,13 +63,13 @@ using System.Text;");
             //.Select(asm => MetadataReference.CreateFromFile(asm))
             //.ToArray();
 
-
-
-            var compilation = CSharpCompilation.Create(DllNamewithoutExt)
+            var Mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
+            var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
+            var compilation = CSharpCompilation.Create(DllNamewithoutExt,  references: new[] { Mscorlib }, options: options)
                .WithOptions(new CSharpCompilationOptions(
                    Microsoft.CodeAnalysis.OutputKind.DynamicallyLinkedLibrary,
                    usings: null,
-                   optimizationLevel: OptimizationLevel.Debug, // TODO
+                   optimizationLevel: OptimizationLevel.Release, // TODO
                    checkOverflow: true,                       // TODO
                    allowUnsafe: true,                          // TODO
                    platform: Platform.AnyCpu,
@@ -89,17 +78,58 @@ using System.Text;");
                    ))
                .AddReferences(_ref)
 
-             .AddSyntaxTrees(CSharpSyntaxTree.ParseText(Template,new CSharpParseOptions {
-            
+             .AddSyntaxTrees(CSharpSyntaxTree.ParseText(Template, new CSharpParseOptions {
+
              }))
              ;
-           var eResult = compilation.Emit(DllFullName);
-           var asms = AssemblyLoadContext.Default.LoadFromAssemblyPath(DllFullName);
+            var eResult = compilation.Emit(DllFullName);
+            compilation.em
+            var asms = AssemblyLoadContext.Default.LoadFromAssemblyPath(DllFullName);
         }
 
-       
+        /// <summary>
+        /// Get An Apple.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id:int}")]
+        public string Get(int id)
+        {
+            if (Apples.ContainsKey(id)) {
+                return Apples[id];
+            }
+            else {
+                return "No Apple!";
+            }
+        }
 
+        /// <summary>
+        /// Get All Apple.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> Get()
+        {
+            return Apples.Values;
+        }
 
+        public void Update(UpdateAppleDto dto)
+        {
+            if (Apples.ContainsKey(dto.Id)) {
+                Apples[dto.Id] = dto.Name;
+            }
+        }
+
+        /// <summary>
+        /// Delete Apple
+        /// </summary>
+        /// <param name="id">Apple Id</param>
+        [HttpDelete("{id:int}")]
+        public void Delete(int id)
+        {
+            if (Apples.ContainsKey(id)) {
+                Apples.Remove(id);
+            }
+        }
 
     }
 }
